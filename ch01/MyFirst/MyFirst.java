@@ -5,9 +5,9 @@ public class MyFirst {
         System.out.println(msg);
     }
     public static void main(String [] args) {
-        // p("I Rule!");
-        // p("The World");
-        DooBee(2);
+        p("I Rule!");
+        p("The World");
+        // DooBee(2);
     }
 
     public static void DooBee(int times) {
