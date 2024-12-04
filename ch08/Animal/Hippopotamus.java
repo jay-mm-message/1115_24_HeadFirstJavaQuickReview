@@ -14,5 +14,5 @@ public class Hippopotamus extends Animal {
     public void roam() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'roam'");
-    };
+    }
 }

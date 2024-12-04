@@ -11,5 +11,5 @@ public class Wolf extends Canine {
     public void sleep() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'sleep'");
-    };
+    }
 }

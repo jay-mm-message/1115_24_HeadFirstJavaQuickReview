@@ -11,5 +11,5 @@ public class Tiger extends Feline {
     public void sleep() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'sleep'");
-    };  
+    }
 }
