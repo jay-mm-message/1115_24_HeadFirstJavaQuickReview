@@ -32,6 +32,8 @@ public class InOutSocketProtocol {
                 prompt("Received from client: " + clientMsg);
                 out.println("Server: " + clientMsg);
             }
+            in.close();
+            out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -60,8 +62,9 @@ public class InOutSocketProtocol {
                 out.println(userMessage);
                 String serverMsg = in.readLine();
                 prompt(serverMsg);
-
             }
+            in.close();
+            out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
