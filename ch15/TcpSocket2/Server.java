@@ -57,12 +57,30 @@ public class Server extends Tools {
         }
         t.prompt("Server recv finish.");
     }
+
+    // go 
+    public void go() {
+        t.prompt("Server recv waiting.....");
+        
+        try {
+            PrintWriter printWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
+            BufferedReader bufferedReader = t.streamToBuff(this.clientSocket.getInputStream());
+            String sendMsg = "12345abc";
+            String recvMsg = null;
+            while(null != (recvMsg = bufferedReader.readLine())) {
+                t.prompt("From client recvMsg: " + recvMsg);
+                t.prompt("Send to client: " + sendMsg);
+                printWriter.println(sendMsg);
+            }
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        t.prompt("Server recv finish.");
+    }
     public static void main(String [] args) {
         Server server = new Server();
         server.establish();
-        server.recv();
-        server.send();
-        server.recv();
-        server.send();
+        server.go();
     }
 }

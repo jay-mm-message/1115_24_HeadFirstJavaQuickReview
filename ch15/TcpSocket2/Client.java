@@ -33,7 +33,7 @@ public class Client extends Tools {
             PrintWriter printWriter = new PrintWriter(this.socket.getOutputStream(), true);
             printWriter.println(sendMsg);
             t.prompt("Client Send: " + sendMsg);
-            printWriter.println("ACK");
+            //printWriter.println("ACK");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,12 +57,32 @@ public class Client extends Tools {
         }
         t.prompt("Client recv finish.");
     }
+    // go
+    public void go(int times) {
+
+        t.prompt("Client recv waiting.....");
+        try {
+            PrintWriter printWriter = new PrintWriter(this.socket.getOutputStream(), true);
+            printWriter.println("ready go");
+
+            BufferedReader bufferedReader = t.streamToBuff(socket.getInputStream());
+            String sendMsg = "abc12345";
+            String recvMsg = null;
+            while(null != (recvMsg = bufferedReader.readLine()) && times != 0) {
+                t.prompt("From sever recvMsg: " + recvMsg);
+                t.prompt("Send to server: " + sendMsg);
+                printWriter.println(sendMsg);
+                times = times - 1;
+            }
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        t.prompt("Client recv finish.");
+    }
     public static void main(String [] args) {
         Client client = new Client();
         client.establish();
-        client.send();
-        client.recv();
-        client.send();
-        client.recv();
+        client.go(20);
     }
 }
