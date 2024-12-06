@@ -1,4 +1,4 @@
-package ch15.TcpSocket2;
+package ch15.TcpSocket;
 
 import java.io.BufferedReader;
 import java.io.IOException;
