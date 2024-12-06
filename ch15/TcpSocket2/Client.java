@@ -1,5 +1,6 @@
 package ch15.TcpSocket2;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -26,20 +27,42 @@ public class Client extends Tools {
     }
         // send
     public void send() {
+        t.prompt("Client send begin...");
         String sendMsg = "12345abc";
-        PrintWriter printWriter;
         try {
-            printWriter = new PrintWriter(this.socket.getOutputStream(), true);
+            PrintWriter printWriter = new PrintWriter(this.socket.getOutputStream(), true);
             printWriter.println(sendMsg);
-            t.prompt("Send: " + sendMsg);
+            t.prompt("Client Send: " + sendMsg);
+            printWriter.println("ACK");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        t.prompt("Client send finish.");
     }
         // recv
+    public void recv() {
+        t.prompt("Client recv waiting.....");
+        try {
+            BufferedReader bufferedReader = t.streamToBuff(socket.getInputStream());
+            String recvMsg = null;
+            while(null != (recvMsg = bufferedReader.readLine())) {
+                if (recvMsg.equals("ACK")) {
+                    break;
+                } else {
+                    t.prompt("From sever recvMsg: " + recvMsg);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        t.prompt("Client recv finish.");
+    }
     public static void main(String [] args) {
         Client client = new Client();
         client.establish();
         client.send();
+        client.recv();
+        client.send();
+        client.recv();
     }
 }
