@@ -60,8 +60,7 @@ public class Server extends Tools {
 
     // go 
     public void go() {
-        t.prompt("Server recv waiting.....");
-        
+        t.prompt("Server recv waiting.....");  
         try {
             PrintWriter printWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
             BufferedReader bufferedReader = t.streamToBuff(this.clientSocket.getInputStream());

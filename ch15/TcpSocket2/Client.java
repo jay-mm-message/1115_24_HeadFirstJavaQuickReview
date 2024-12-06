@@ -57,9 +57,9 @@ public class Client extends Tools {
         }
         t.prompt("Client recv finish.");
     }
+    
     // go
     public void go(int times) {
-
         t.prompt("Client recv waiting.....");
         try {
             PrintWriter printWriter = new PrintWriter(this.socket.getOutputStream(), true);
