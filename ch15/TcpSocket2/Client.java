@@ -70,8 +70,8 @@ public class Client extends Tools {
             String recvMsg = null;
             while(null != (recvMsg = bufferedReader.readLine()) && times != 0) {
                 t.prompt("From sever recvMsg: " + recvMsg);
-                t.prompt("Send to server: " + sendMsg);
                 printWriter.println(sendMsg);
+                t.prompt("Send to server: " + sendMsg);
                 times = times - 1;
             }
             socket.close();
