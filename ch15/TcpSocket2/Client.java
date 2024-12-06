@@ -57,7 +57,7 @@ public class Client extends Tools {
         }
         t.prompt("Client recv finish.");
     }
-    
+
     // go
     public void go(int times) {
         t.prompt("Client recv waiting.....");
@@ -65,7 +65,7 @@ public class Client extends Tools {
             PrintWriter printWriter = new PrintWriter(this.socket.getOutputStream(), true);
             printWriter.println("ready go");
 
-            BufferedReader bufferedReader = t.streamToBuff(socket.getInputStream());
+            BufferedReader bufferedReader = t.streamToBuff(this.socket.getInputStream());
             String sendMsg = "abc12345";
             String recvMsg = null;
             while(null != (recvMsg = bufferedReader.readLine()) && times != 0) {
