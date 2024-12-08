@@ -19,10 +19,40 @@ import java.net.UnknownHostException;
 
 public class SimpleChatClient {
 
+    BufferedReader serverReader;
+    PrintWriter serverWriter;
+    Socket socket;
+
+    JTextArea boardShow;
+    JTextField boardEdit;
+
     public static void main(String[] args) {
         SimpleChatClient client = new SimpleChatClient();
         client.go();
     }
+
+    class SendButtonListener implements ActionListener {
+
+        public String fMsg(String s) {
+            String msg = new String("The client says: Hi, server, I sent a message to you:");
+            msg += "<" + s + ">\n";
+            return msg;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                String inputText = boardEdit.getText();
+                if (!inputText.isEmpty()) {
+                    boardShow.append(fMsg(inputText));
+                    boardEdit.setText("");
+                    serverWriter.println(inputText);
+                    serverWriter.flush();
+                }
+            } catch (Exception ex) { ex.printStackTrace(); }
+            boardEdit.setText(" ");
+            boardEdit.requestFocus();
+        }
+    } // close SendButtonListener
 
     public void DrawInterfaceWindow() {
        // Create a new JFrame
@@ -31,24 +61,24 @@ public class SimpleChatClient {
        frame.setSize(800, 500);
 
        // Create a JTextArea
-       incoming = new JTextArea(15, 50);
-       incoming.setLineWrap(true);
-       incoming.setWrapStyleWord(true);
-       incoming.setEditable(false);
+       boardShow = new JTextArea(15, 50);
+       boardShow.setLineWrap(true);
+       boardShow.setWrapStyleWord(true);
+       boardShow.setEditable(false);
 
        // Add the JTextArea to a JScrollPane
-       JScrollPane qScroller = new JScrollPane(incoming);
+       JScrollPane qScroller = new JScrollPane(boardShow);
        qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
        qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
        // Create a JTextField and a JButton
-       outgoing = new JTextField(20);
+       boardEdit = new JTextField(20);
        JButton sendButton = new JButton("Send");
        sendButton.addActionListener(new SendButtonListener());
 
        JPanel mainPanel = new JPanel();
        mainPanel.add(qScroller);
-       mainPanel.add(outgoing);
+       mainPanel.add(boardEdit);
        mainPanel.add(sendButton);
 
        frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
@@ -57,52 +87,25 @@ public class SimpleChatClient {
        frame.setVisible(true);
     }
 
-    public void go() {
-        DrawInterfaceWindow();
-        // Prepare to communicate with the server.
-        setUpNetworking();
-        Thread readerThread = new Thread(new IncomingReader());
-        readerThread.start();
-
-    } // close go
-
     private void setUpNetworking() {
         try {
             socket = new Socket("127.0.0.1", 4242);
-            InputStreamReader inputStreamReader = 
-                new InputStreamReader(socket.getInputStream());
-            this.bufferedReader = new BufferedReader(inputStreamReader);
-            this.printWriter = new PrintWriter(socket.getOutputStream());
+            this.serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.serverWriter = new PrintWriter(socket.getOutputStream());
             prompt("networking established");
         } catch (UnknownHostException e) { e.printStackTrace();
         } catch (IOException e) { e.printStackTrace(); }
     } // close setUpNetworking
 
-    BufferedReader bufferedReader;
-    PrintWriter printWriter;
-    Socket socket;
+    public void go() {
+        DrawInterfaceWindow();
+        
+        // Prepare to communicate with the server.
+        setUpNetworking();
 
-    class SendButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                String inputText = outgoing.getText();
-                if (!inputText.isEmpty()) {
-                    String msgSend = new String("The client says: Hi, server, I sent a message to you:");
-                    incoming.append(msgSend + "<" + inputText + ">" + "\n");
-                    outgoing.setText("");
-                }
-                printWriter.println(inputText);
-                printWriter.flush();
-            } catch (Exception ex) { ex.printStackTrace(); }
-            outgoing.setText(" ");
-            outgoing.requestFocus();
-        }
-    } // close SendButtonListener
-
-    JTextArea incoming;
-    JTextField outgoing;
+        Thread readerThread = new Thread(new IncomingReader());
+        readerThread.start();
+    } // close go
 
     class IncomingReader implements Runnable {
 
@@ -110,16 +113,17 @@ public class SimpleChatClient {
         public void run() {
             String msg;
             try {
-                prompt("IncomingReader Waiting....");
-                while((msg = bufferedReader.readLine()) != null) {
+                while((msg = serverReader.readLine()) != null) {
                     if (!msg.equals("")) {
-                        String serverMsg = new String("The server says: " + msg + "\n");
-                        prompt(serverMsg);
-                        incoming.append(serverMsg);        
+                        boardShow.append(fServerMsg(msg));    
                     }
                  }
-                prompt("IncomingReader Write finish.");
             } catch (IOException e) { e.printStackTrace(); }
+        }
+
+        public String fServerMsg(String s) {
+            String msg = new String("The server says: " + s + "\n");
+            return msg;
         }
     } // close IncomingReader
 
