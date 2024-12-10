@@ -16,24 +16,20 @@ public class Client {
             socket = new Socket("127.0.0.1", 4242);
             PrintWriter toServer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            toServer.println("Hi server");
-            toServer.flush();
-
-            BufferedReader getServerMsg = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String receiveMsg = null;
-            while((receiveMsg = getServerMsg.readLine()) != null) {
-                System.out.println("From server: " + receiveMsg);
+            for(int i = 0 ; i < 100 ; ++i) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 toServer.println("Hi server");
                 toServer.flush();
-                if (receiveMsg.equals("CLOSE_CLIENT")) {
-                    toServer.println("CLOSE_SERVER");
-                    toServer.flush();
-                    break;
-                }
-                toServer.println("CLOSE_SERVER");
             }
-            socket.close();
+            toServer.println("FIN");
+            toServer.flush();
+
             System.out.println("client close finish");
+            socket.close();
         } catch (UnknownHostException e) { e.printStackTrace();
         } catch (IOException e) { e.printStackTrace(); }
     }
