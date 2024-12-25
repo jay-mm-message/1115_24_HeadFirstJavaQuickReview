@@ -1,24 +1,28 @@
 package ch02.DVDPlayer;
 
+/**
+ * The DVDPlayer class represents a DVD player that can play and record DVDs.
+ * It contains methods to simulate playing and recording DVDs.
+ */
 public class DVDPlayer {
 
     /**
-     * Constructor and initialization a record state on DVD player
-     * @param canRecord canRecord is a record state
+     * Indicates whether the DVD player can record DVDs.
+     * Default value is false, meaning the player cannot record.
      */
     boolean canRecord = false;
 
     /**
-     * The method will show that DVD state
-     * @return It will show that DVD is playing
+     * Simulates playing a DVD.
+     * Prints a message to the console indicating that the DVD is playing.
      */
     void playDVD() {
         System.out.println("DVD playing");
     }
 
     /**
-     * The method will show that DVD state
-     * @return It will show that DVD is recording
+     * Simulates recording a DVD.
+     * Prints a message to the console indicating that the DVD is being recorded.
      */
     void recordDVD() {
         System.out.println("DVD recording");
